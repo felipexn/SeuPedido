@@ -19,14 +19,17 @@ public class MesaService {
         return mesaDao.findAvailable();
     }
 
-    public Mesa reservar(Long idMesa) {
+    public void reservar(Long idMesa) {
         Mesa mesa = mesaDao.findById(idMesa);
         if (mesa.isOcupada()) {
-            throw new IllegalStateException("Mesa já está ocupada");
+            return;
         }
         mesa.setOcupada(true);
         mesaDao.update(mesa);
-        return mesa;
+
+    }
+    public Mesa buscarPorId(Long id) {
+        return mesaDao.findById(id);
     }
 
     public Mesa liberar(Long idMesa) {

@@ -2,6 +2,8 @@
 package com.seupedido.DAO;
 
 import com.seupedido.Model.Pedido;
+import com.seupedido.enums.StatusPedidoEnuns;
+
 import java.util.List;
 
 public interface PedidoDAO {
@@ -12,4 +14,6 @@ public interface PedidoDAO {
     Long create(Pedido pedido);
     void updateTotal(Long pedidoId, java.math.BigDecimal total);
     void updateStatus(Long pedidoId, String status);
+    List<Pedido> findByStatus(StatusPedidoEnuns status);
+
 }

@@ -31,17 +31,7 @@ public class CaixaViewController {
      * Exibe a página de gerenciamento do caixa
      * GET /caixa/view
      */
-    @GetMapping
-    public String viewCaixa(Model model) {
-        // Lista o cardápio para adicionar itens
-        List<Item> cardapio = itemService.listarTodos();
-        model.addAttribute("cardapio", cardapio);
 
-        // (Opcional) Listar pedidos abertos/finalizados
-        // model.addAttribute("pedidos", pedidoService.findAll());
-
-        return "caixa";
-    }
 
     /**
      * Adiciona um item ao cardápio via formulário de view
@@ -57,10 +47,18 @@ public class CaixaViewController {
      * Finaliza um pedido (e libera a mesa) via view
      * POST /caixa/view/finalizar/{pedidoId}
      */
-    @PostMapping("/finalizar/{pedidoId}")
-    public String finalizarPedido(@PathVariable Long pedidoId) {
-        Pedido pedido = pedidoService.findById(pedidoId);
-        caixaService.finalizarPedido(pedido);
+    @GetMapping
+    public String viewCaixa(Model model) {
+        model.addAttribute("newItem", new Item());
+        model.addAttribute("cardapio", itemService.listarTodos());
+        model.addAttribute("pedidosAbertos", pedidoService.listarPedidosAbertos()); // <--- novo
+        return "caixa";
+    }
+
+    @PostMapping("/finalizar/{id}")
+    public String finalizarPedido(@PathVariable Long id) {
+        pedidoService.finalizarPedido(id);
         return "redirect:/caixa/view";
+
     }
 }

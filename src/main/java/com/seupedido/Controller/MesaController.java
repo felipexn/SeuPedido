@@ -23,10 +23,10 @@ public class MesaController {
         return mesaService.listarDisponiveis();
     }
 
-    // POST /mesas/{id}/reservar
+     //POST /mesas/{id}/reservar
     @PostMapping("/{id}/reservar")
-    public Mesa reservar(@PathVariable Long id) {
-        return mesaService.reservar(id);
+    public void reservar(@PathVariable Long id) {
+         mesaService.reservar(id);
     }
 
     // POST /mesas/{id}/liberar

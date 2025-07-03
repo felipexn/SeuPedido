@@ -12,6 +12,7 @@ import com.seupedido.Model.Mesa;
 import com.seupedido.Model.Pedido;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -28,6 +29,11 @@ public class PedidoService {
         this.itemPedidoDao = itemPedidoDao;
     }
 
+    public List<Pedido> listarPedidosAbertos() {
+        return pedidoDao.findByStatus(StatusPedidoEnuns.ABERTO);
+    }
+
+
     public Pedido adicionarItemAoPedido(Long idMesa, Long idItem) {
         Mesa mesa = mesaDao.findById(idMesa);
         if (!mesa.isOcupada()) {
@@ -39,16 +45,25 @@ public class PedidoService {
             pedido = new Pedido();
             pedido.setMesaId(idMesa);
             pedido.setStatus(StatusPedidoEnuns.ABERTO);
+            pedido.setTotal(BigDecimal.valueOf(0.0)); // 🔥 inicia com zero
             Long idPedido = pedidoDao.create(pedido);
             pedido.setId(idPedido);
         }
 
         Item item = itemDao.findById(idItem);
+
+        // 🔥 Cria o itemPedido
         ItemPedido itemPedido = new ItemPedido();
         itemPedido.setPedidoId(pedido.getId());
         itemPedido.setItemId(item.getId());
+        itemPedido.setQuantidade(1); // define a quantidade como 1 por padrão
         itemPedido.setStatus(item.isPrecisaCozinha() ? StatusItemEnuns.PENDENTE : StatusItemEnuns.PRONTO);
         itemPedidoDao.create(itemPedido);
+
+        // 🔥 Atualiza o total do pedido
+        BigDecimal novoTotal = pedido.getTotal().add(item.getPreco());
+        pedido.setTotal(novoTotal);
+        pedidoDao.update(pedido);
 
         return pedido;
     }

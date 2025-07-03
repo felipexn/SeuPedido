@@ -29,6 +29,7 @@ public class AtendenteController {
         List<ItemPedido> prontos = atendenteService.listarProntosParaEntrega();
         return ResponseEntity.ok(prontos);
     }
+
     // GET /atendente/mesas/{idMesa} - lista os itens do pedido atual da mesa
     @GetMapping("/mesas/{idMesa}")
     public ResponseEntity<List<ItemPedido>> verPedidoMesa(@PathVariable Long idMesa) {

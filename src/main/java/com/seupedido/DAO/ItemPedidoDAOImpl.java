@@ -82,13 +82,29 @@ public class ItemPedidoDAOImpl implements ItemPedidoDAO {
     @Override
     public List<ItemPedido> findReadyForAttendant() {
         return jdbc.query(
-                "SELECT ip.* FROM item_pedido ip " +
-                        "JOIN item i ON ip.item_id = i.id " +
-                        "WHERE (i.precisa_cozinha = TRUE AND ip.status = 'PRONTO') " +
-                        "   OR (i.precisa_cozinha = FALSE AND ip.status = 'PENDENTE')",
-                rowMapper
+                "SELECT ip.*, i.produto, i.precisa_cozinha\n" +
+                        "FROM item_pedido ip\n" +
+                        "JOIN item i ON ip.item_id = i.id\n" +
+                        "WHERE ip.status = 'PRONTO'",
+                (rs, rowNum) -> {
+                    ItemPedido ip = new ItemPedido();
+                    ip.setId(rs.getLong("id"));
+                    ip.setPedidoId(rs.getLong("pedido_id"));
+                    ip.setItemId(rs.getLong("item_id"));
+                    ip.setQuantidade(rs.getInt("quantidade"));
+                    ip.setStatus(StatusItemEnuns.valueOf(rs.getString("status")));
+
+                    Item item = new Item();
+                    item.setId(rs.getLong("item_id"));
+                    item.setProduto(rs.getString("produto"));
+                    item.setPrecisaCozinha(rs.getBoolean("precisa_cozinha"));
+                    ip.setItem(item);
+
+                    return ip;
+                }
         );
     }
+
 
     @Override
     public Long create(ItemPedido ip) {

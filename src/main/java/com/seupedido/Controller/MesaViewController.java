@@ -2,6 +2,7 @@ package com.seupedido.Controller;
 
 import com.seupedido.Model.Item;
 import com.seupedido.Model.ItemPedido;
+import com.seupedido.Model.Mesa;
 import com.seupedido.Model.Pedido;
 import com.seupedido.Service.ItemService;
 import com.seupedido.Service.MesaService;
@@ -30,14 +31,20 @@ public class MesaViewController {
 
     @GetMapping("/view")
     public String viewMesa(@PathVariable Long mesaId, Model model) {
-        // garante reserva da mesa
-        mesaService.reservar(mesaId);
+        Mesa mesa = mesaService.buscarPorId(mesaId);
+
+
+
+        Pedido pedido = pedidoService.buscarPedidoAbertoPorMesa(mesaId);
+
+        if (!mesa.isOcupada()) {
+            mesaService.reservar(mesaId);
+        }
 
         // cardápio completo
         List<Item> itens = itemService.listarTodos();
 
-        // pedido aberto
-        Pedido pedido = pedidoService.buscarPedidoAbertoPorMesa(mesaId);
+        // itens do pedido
         List<ItemPedido> itensPedido = pedido != null
                 ? pedidoService.listarItensDoPedido(pedido.getId())
                 : List.of();
@@ -49,6 +56,7 @@ public class MesaViewController {
 
         return "mesa";
     }
+
 
     @PostMapping("/adicionar/{itemId}")
     public String adicionarItem(@PathVariable Long mesaId,

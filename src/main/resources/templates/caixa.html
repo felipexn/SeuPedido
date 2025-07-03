@@ -1,33 +1,17 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Caixa</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-</head>
-<body>
-<h1>Caixa - Gerenciar Cardápio</h1>
-
 <section>
-    <h2>Adicionar Item</h2>
-    <form th:action="@{/caixa/cardapio}" method="post" th:object="${newItem}">
-        <label>Produto: <input type="text" th:field="*{produto}"/></label><br/>
-        <label>Preço: <input type="number" step="0.01" th:field="*{preco}"/></label><br/>
-        <label>Precisa Cozinha: <input type="checkbox" th:field="*{precisaCozinha}"/></label><br/>
-        <button type="submit">Adicionar</button>
-    </form>
-</section>
-
-<section>
-    <h2>Cardápio Atual</h2>
+    <h2>Pedidos Abertos</h2>
     <table>
-        <thead><tr><th>ID</th><th>Produto</th><th>Preço</th><th>Cozinha</th></tr></thead>
+        <thead><tr><th>Mesa</th><th>ID do Pedido</th><th>Total</th><th>Ação</th></tr></thead>
         <tbody>
-        <tr th:each="item : ${cardapio}">
-            <td th:text="${item.id}"></td>
-            <td th:text="${item.produto}"></td>
-            <td th:text="${item.preco}"></td>
-            <td th:text="${item.precisaCozinha}"></td>
+        <tr th:each="pedido : ${pedidosAbertos}">
+            <td th:text="${pedido.mesaId}"></td>
+            <td th:text="${pedido.id}"></td>
+            <td th:text="${pedido.total}"></td>
+            <td>
+                <form th:action="@{/caixa/view/finalizar/{id}(id=${pedido.id})}" method="post">
+                    <button type="submit">Finalizar</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>

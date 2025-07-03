@@ -76,6 +76,12 @@ public class PedidoDAOImpl implements PedidoDAO {
         });
     }
 
+    @Override
+    public List<Pedido> findByStatus(StatusPedidoEnuns status) {
+        return jdbc.query("SELECT * FROM pedido WHERE status = ?", rowMapper, status.name());
+    }
+
+
 
     @Override
     public List<Pedido> findByMesaId(Long mesaId) {
