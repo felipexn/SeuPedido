@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Atendente - Mesa [[${mesaId}]]</title>
+</head>
+<body>
+<h1>Mesa <span th:text="${mesaId}"></span></h1>
+
+<div th:if="${mensagem}">
+  <p th:text="${mensagem}" style="color: red;"></p>
+</div>
+
+<div th:if="${#lists.isEmpty(itens)}">
+  <p>Nenhum item neste pedido.</p>
+</div>
+
+<div th:if="${!#lists.isEmpty(itens)}">
+  <table border="1">
+    <thead>
+    <tr>
+      <th>ID do ItemPedido</th>
+      <th>Item ID</th>
+      <th>Quantidade</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="ip : ${itens}">
+      <td th:text="${ip.id}"></td>
+      <td th:text="${ip.itemId}"></td>
+      <td th:text="${ip.quantidade}"></td>
+      <td th:text="${ip.status}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<br>
+
+<a th:href="@{'/atendente/view'}">Voltar</a>
+</body>
+</html>

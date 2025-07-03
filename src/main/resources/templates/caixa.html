@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Caixa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Caixa - Gerenciar Cardápio</h1>
+
+<section>
+    <h2>Adicionar Item</h2>
+    <form th:action="@{/caixa/cardapio}" method="post" th:object="${newItem}">
+        <label>Produto: <input type="text" th:field="*{produto}"/></label><br/>
+        <label>Preço: <input type="number" step="0.01" th:field="*{preco}"/></label><br/>
+        <label>Precisa Cozinha: <input type="checkbox" th:field="*{precisaCozinha}"/></label><br/>
+        <button type="submit">Adicionar</button>
+    </form>
+</section>
+
+<section>
+    <h2>Cardápio Atual</h2>
+    <table>
+        <thead><tr><th>ID</th><th>Produto</th><th>Preço</th><th>Cozinha</th></tr></thead>
+        <tbody>
+        <tr th:each="item : ${cardapio}">
+            <td th:text="${item.id}"></td>
+            <td th:text="${item.produto}"></td>
+            <td th:text="${item.preco}"></td>
+            <td th:text="${item.precisaCozinha}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>

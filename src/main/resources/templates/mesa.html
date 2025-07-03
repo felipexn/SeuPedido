@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mesa [[${mesaId}]]</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Mesa <span th:text="${mesaId}"></span></h1>
+
+<section>
+    <h2>Cardápio</h2>
+    <div class="cardapio">
+        <div th:each="item : ${itens}" class="card-item">
+            <h3 th:text="${item.produto}"></h3>
+            <p>Preço: R$ <span th:text="${item.preco}"></span></p>
+            <form th:action="@{'/mesas/' + ${mesaId} + '/adicionar/' + ${item.id}}" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <button type="submit">Adicionar</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Carrinho</h2>
+    <div th:if="${itensPedido.isEmpty()}">Nenhum item adicionado.</div>
+    <table th:if="${!itensPedido.isEmpty()}">
+        <thead>
+        <tr><th>Produto</th><th>Quantidade</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+        <tr th:each="ip : ${itensPedido}">
+            <td th:text="${ip.itemId}"></td>
+            <td th:text="${ip.quantidade}"></td>
+            <td th:text="${ip.status}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+
+</body>
+</html>

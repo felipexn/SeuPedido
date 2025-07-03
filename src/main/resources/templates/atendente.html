@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Atendente</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Atendente - Itens Prontos para Entrega</h1>
+<table>
+    <thead>
+    <tr><th>ID</th><th>Pedido</th><th>Item</th><th>Qtd</th><th>Ação</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="ip : ${prontos}">
+        <td th:text="${ip.id}"></td>
+        <td th:text="${ip.pedidoId}"></td>
+        <td th:text="${ip.itemId}"></td>
+        <td th:text="${ip.quantidade}"></td>
+        <td>
+            <form th:action="@{'/atendente/' + ${ip.id} + '/entregar'}" method="post">
+                <button type="submit">Entregar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

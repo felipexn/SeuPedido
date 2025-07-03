@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cozinha</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<h1>Cozinha - Itens a Preparar</h1>
+<table>
+    <thead>
+    <tr><th>ID</th><th>Pedido</th><th>Item</th><th>Qtd</th><th>Ação</th></tr>
+    </thead>
+    <tbody>
+    <tr th:each="ip : ${pendentes}">
+        <td th:text="${ip.id}"></td>
+        <td th:text="${ip.pedidoId}"></td>
+        <td th:text="${ip.itemId}"></td>
+        <td th:text="${ip.quantidade}"></td>
+        <td>
+            <form th:action="@{'/cozinha/view/pronto/' + ${ip.id}}" method="post">
+                <button type="submit">Marcar Pronto</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
