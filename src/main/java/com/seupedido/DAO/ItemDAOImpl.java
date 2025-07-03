@@ -37,10 +37,18 @@ public class ItemDAOImpl implements ItemDAO {
 
     @Override
     public Item findById(Long id) {
-        return jdbc.queryForObject(
-                "SELECT id, produto, preco, precisa_cozinha FROM item WHERE id = ?",
-                rowMapper, id
-        );
+        String sql = "SELECT * FROM item WHERE id = ?";
+        return jdbc.query(sql, new Object[]{id}, rs -> {
+            if (rs.next()) {
+                Item item = new Item();
+                item.setId(rs.getLong("id"));
+                item.setProduto(rs.getString("produto"));
+                item.setPreco(BigDecimal.valueOf(rs.getDouble("preco")));
+                item.setPrecisaCozinha(rs.getBoolean("precisa_cozinha"));
+                return item;
+            }
+            return null;
+        });
     }
 
     @Override

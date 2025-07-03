@@ -11,8 +11,16 @@ public class ItemPedido {
     private int quantidade;
     private StatusItemEnuns status;
     // Para facilitar, você pode opcionalmente ter referências:
-    // private Item item;
-    // private Pedido pedido;
+     private Item item;
+
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
+// private Pedido pedido;
 
     public ItemPedido() { }
 

@@ -1,13 +1,18 @@
 // ItemPedidoDaoImpl.java
 package com.seupedido.DAO;
 
+import com.seupedido.Controller.ItemController;
+import com.seupedido.Model.Item;
 import com.seupedido.Model.ItemPedido;
+import com.seupedido.Service.ItemService;
+
 import com.seupedido.enums.StatusItemEnuns;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +22,7 @@ import java.util.List;
 @Repository
 public class ItemPedidoDAOImpl implements ItemPedidoDAO {
     private final JdbcTemplate jdbc;
+
     private final RowMapper<ItemPedido> rowMapper = new RowMapper<ItemPedido>() {
 
         @Override
@@ -31,34 +37,37 @@ public class ItemPedidoDAOImpl implements ItemPedidoDAO {
         }
     };
 
-    public ItemPedidoDAOImpl(JdbcTemplate jdbc) {
+    private final ItemDAO itemDao;
+    public ItemPedidoDAOImpl(JdbcTemplate jdbc, ItemDAO itemDao) {
         this.jdbc = jdbc;
+        this.itemDao = itemDao;
     }
 
     @Override
     public ItemPedido findById(Long id) {
-        String sql = "SELECT * FROM item_pedido WHERE id = ?";
-        return jdbc.query(sql, new Object[]{id}, rs -> {
-            if (rs.next()) {
-                ItemPedido item = new ItemPedido();
-                item.setId(rs.getLong("id"));
-                item.setPedidoId(rs.getLong("pedido_id"));
-                item.setItemId(rs.getLong("item_id"));
-                item.setStatus(StatusItemEnuns.valueOf(rs.getString("status")));
-                return item;
-            }
-            return null;
-        });
+        return null;
     }
-
 
     @Override
     public List<ItemPedido> findByPedidoId(Long pedidoId) {
-        return jdbc.query(
-                "SELECT * FROM item_pedido WHERE pedido_id = ?",
-                rowMapper, pedidoId
-        );
+        String sql = "SELECT * FROM item_pedido WHERE pedido_id = ?";
+        return jdbc.query(sql, (rs, rowNum) -> {
+            ItemPedido ip = new ItemPedido();
+            ip.setId(rs.getLong("id"));
+            ip.setPedidoId(rs.getLong("pedido_id"));
+            ip.setItemId(rs.getLong("item_id"));
+            ip.setQuantidade(rs.getInt("quantidade"));
+            ip.setStatus(StatusItemEnuns.valueOf(rs.getString("status")));
+
+            // Carrega o item completo
+            Item item = itemDao.findById(rs.getLong("item_id"));
+            ip.setItem(item);
+
+            return ip;
+        }, pedidoId);
     }
+
+
 
     @Override
     public List<ItemPedido> findPendingKitchenJobs() {

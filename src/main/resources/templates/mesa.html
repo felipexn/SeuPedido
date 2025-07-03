@@ -10,12 +10,11 @@
 
 <section>
     <h2>Cardápio</h2>
-    <div class="cardapio">
-        <div th:each="item : ${itens}" class="card-item">
+    <div class="cardapio" style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <div th:each="item : ${itens}" style="border: 1px solid #ccc; padding: 10px; width: 200px;">
             <h3 th:text="${item.produto}"></h3>
             <p>Preço: R$ <span th:text="${item.preco}"></span></p>
             <form th:action="@{'/mesas/' + ${mesaId} + '/adicionar/' + ${item.id}}" method="post">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                 <button type="submit">Adicionar</button>
             </form>
         </div>
@@ -25,15 +24,19 @@
 <section>
     <h2>Carrinho</h2>
     <div th:if="${itensPedido.isEmpty()}">Nenhum item adicionado.</div>
-    <table th:if="${!itensPedido.isEmpty()}">
+    <table th:if="${!itensPedido.isEmpty()}" border="1" cellpadding="8">
         <thead>
-        <tr><th>Produto</th><th>Quantidade</th><th>Status</th></tr>
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Status</th>
+        </tr>
         </thead>
         <tbody>
         <tr th:each="ip : ${itensPedido}">
-            <td th:text="${ip.itemId}"></td>
-            <td th:text="${ip.quantidade}"></td>
-            <td th:text="${ip.status}"></td>
+            <td th:text="${ip.item.produto}">Nome do item</td>
+            <td th:text="${ip.quantidade}">1</td>
+            <td th:text="${ip.status}">PENDENTE</td>
         </tr>
         </tbody>
     </table>
